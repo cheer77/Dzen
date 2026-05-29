@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: dzen-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: CLIENT_URL
+        value: https://dzen-frontend.onrender.com,http://localhost:5173
+
+  - type: web
+    name: dzen-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://dzen-backend.onrender.com/api
+      - key: VITE_SOCKET_URL
+        value: https://dzen-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

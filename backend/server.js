@@ -8,9 +8,23 @@ import { initSocket } from './socket.js';
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 4000;
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+const clientUrls = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((url) => url.trim())
+  .filter(Boolean);
 
-app.use(cors({ origin: clientUrl }));
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || clientUrls.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`Origin ${origin} is not allowed by CORS`));
+  }
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get('/api/health', (req, res) => {
@@ -27,7 +41,7 @@ app.get('/api/products', (req, res) => {
 
 const io = new Server(server, {
   cors: {
-    origin: clientUrl,
+    origin: clientUrls,
     methods: ['GET', 'POST']
   }
 });

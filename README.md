@@ -139,6 +139,51 @@ http://localhost:5173
 
 Stop containers with `Ctrl+C` in the Docker Compose terminal.
 
+## Deploy To Render
+
+This repository includes `render.yaml` for Render Blueprint deployment.
+
+Render will create two services:
+
+- `dzen-backend` - Node.js Web Service for Express + Socket.io
+- `dzen-frontend` - Static Site for the Vite React app
+
+Expected production URLs:
+
+- frontend: `https://dzen-frontend.onrender.com`
+- backend: `https://dzen-backend.onrender.com`
+
+### Deploy With Blueprint
+
+1. Push this repository to GitHub.
+2. Open Render Dashboard.
+3. Click `New +` -> `Blueprint`.
+4. Connect the GitHub repository.
+5. Select branch `main`.
+6. Keep Blueprint path as `render.yaml`.
+7. Click `Deploy Blueprint`.
+
+Render will read `render.yaml`, build both services, and redeploy them automatically on future pushes to `main`.
+
+### Important Render Notes
+
+- Render Web Services should listen on the `PORT` environment variable. The backend already uses `process.env.PORT`.
+- The frontend is a static Vite build. Its `VITE_API_URL` and `VITE_SOCKET_URL` values are injected at build time.
+- If Render gives your services different URLs, update these variables in the Render Dashboard:
+  - frontend service:
+    - `VITE_API_URL`
+    - `VITE_SOCKET_URL`
+  - backend service:
+    - `CLIENT_URL`
+- Static site rewrite rule is configured in `render.yaml` so direct links like `/orders` and `/products` work with React Router.
+- On Render free plan, the backend can sleep after inactivity. The first request after sleep can take a little longer.
+
+Backend production health check:
+
+```text
+https://dzen-backend.onrender.com/api/health
+```
+
 ## Environment Variables
 
 Backend:
