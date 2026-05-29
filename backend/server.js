@@ -13,11 +13,15 @@ const clientUrls = (process.env.CLIENT_URL || 'http://localhost:5173')
   .map((url) => url.trim())
   .filter(Boolean);
 
+const isAllowedOrigin = (origin) => {
+  const isRenderOrigin = /^https:\/\/[a-z0-9-]+\.onrender\.com$/.test(origin || '');
+
+  return !origin || clientUrls.includes(origin) || isRenderOrigin;
+};
+
 const corsOptions = {
   origin: (origin, callback) => {
-    const isRenderOrigin = /^https:\/\/[a-z0-9-]+\.onrender\.com$/.test(origin || '');
-
-    if (!origin || clientUrls.includes(origin) || isRenderOrigin) {
+    if (isAllowedOrigin(origin)) {
       callback(null, true);
       return;
     }
@@ -55,7 +59,14 @@ app.get('/api/products', (req, res) => {
 
 const io = new Server(server, {
   cors: {
-    origin: clientUrls,
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origin ${origin} is not allowed by Socket.io CORS`));
+    },
     methods: ['GET', 'POST']
   }
 });
