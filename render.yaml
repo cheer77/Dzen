@@ -9,7 +9,7 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: CLIENT_URL
-        value: https://dzen-frontend.onrender.com,http://localhost:5173
+        value: http://localhost:5173
 
   - type: web
     name: dzen-frontend
@@ -19,9 +19,9 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://dzen-backend.onrender.com/api
+        value: https://dzen-backend-7y56.onrender.com/api
       - key: VITE_SOCKET_URL
-        value: https://dzen-backend.onrender.com
+        value: https://dzen-backend-7y56.onrender.com
     routes:
       - type: rewrite
         source: /*

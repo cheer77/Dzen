@@ -15,7 +15,9 @@ const clientUrls = (process.env.CLIENT_URL || 'http://localhost:5173')
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || clientUrls.includes(origin)) {
+    const isRenderOrigin = /^https:\/\/[a-z0-9-]+\.onrender\.com$/.test(origin || '');
+
+    if (!origin || clientUrls.includes(origin) || isRenderOrigin) {
       callback(null, true);
       return;
     }

@@ -150,8 +150,8 @@ Render will create two services:
 
 Expected production URLs:
 
-- frontend: `https://dzen-frontend.onrender.com`
-- backend: `https://dzen-backend.onrender.com`
+- frontend: check the `dzen-frontend` primary URL in Render Dashboard
+- backend: `https://dzen-backend-7y56.onrender.com`
 
 ### Deploy With Blueprint
 
@@ -181,7 +181,7 @@ Render will read `render.yaml`, build both services, and redeploy them automatic
 Backend production health check:
 
 ```text
-https://dzen-backend.onrender.com/api/health
+https://dzen-backend-7y56.onrender.com/api/health
 ```
 
 ## Environment Variables
