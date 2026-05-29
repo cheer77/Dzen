@@ -27,6 +27,18 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Orders & Products API',
+    status: 'ok',
+    endpoints: ['/api/health', '/api/orders', '/api/products']
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
@@ -49,5 +61,5 @@ const io = new Server(server, {
 initSocket(io);
 
 server.listen(port, () => {
-  console.log(`Backend is running on port ${port}`);
+  console.log(`Orders & Products API is running on port ${port}`);
 });
